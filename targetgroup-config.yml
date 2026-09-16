@@ -1,0 +1,19 @@
+apiVersion: gateway.k8s.aws/v1
+kind: TargetGroupConfiguration
+metadata:
+  name: notification-service-tg
+  namespace: production
+spec:
+  defaultConfiguration:
+    targetType: ip
+    protocol: HTTP
+    healthCheckConfig:
+      healthCheckProtocol: HTTP
+      healthCheckPath: /actuator/health/readiness
+      healthCheckPort: "8080"
+      healthCheckInterval: 10
+      healthCheckTimeout: 5
+      healthyThresholdCount: 2
+      unhealthyThresholdCount: 3
+      matcher:
+        httpCode: "200"

@@ -1,0 +1,10 @@
+apiVersion: gateway.k8s.aws/v1
+kind: LoadBalancerConfiguration
+metadata:
+  name: internet-facing-alb
+  namespace: production
+spec:
+  scheme: internet-facing
+  defaultTargetGroupConfiguration:
+    name: notification-service-tg
+
