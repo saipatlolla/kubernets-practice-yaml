@@ -1,0 +1,49 @@
+check oidc issuer
+
+aws eks describe-cluster --name production-cluster --query 'cluster.identity.oidc.issuer' --output text
+associate  oidc provider to issuer 
+eksctl utils associate-iam-oidc-provider   --cluster production-cluster   --region eu-north-1   --approve
+aws iam list-open-id-connect-providers
+
+kubectl create serviceaccount aws-load-balancer-controller   -n kube-system
+
+
+aws iam detach-role-policy \
+  --role-name AWSLoadBalancerControllerRole \
+  --policy-arn arn:aws:iam::673318657788:policy/AWSLoadBalancerControllerIAMPolicy
+
+aws iam delete-role \
+  --role-name AWSLoadBalancerControllerRole
+
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
+
+aws iam get-policy --policy-arn arn:aws:iam::673318657788:policy/AWSLoadBalancerControllerIAMPolicy
+
+aws iam list-policies   --scope Local   --query "Policies[?PolicyName=='iam_policy.json'].[PolicyName,Arn,DefaultVersionId]"   --output table
+aws iam list-policies   --scope Local   --query 'Policies[*].[PolicyName,Arn]'   --output table
+
+########################################################################################################################### 
+
+aws iam create-role --role-name AWSLoadBalancerControllerRole --assume-role-policy-document file://lbc-trust-policy.json
+
+aws iam get-role --role-name AWSLoadBalancerControllerRole
+
+aws iam attach-role-policy --role-name AWSLoadBalancerControllerRole --policy-arn arn:aws:iam::673318657788:policy/AWSLoadBalancerControllerIAMPolicy
+
+aws iam list-attached-role-policies --role-name AWSLoadBalancerControllerRole --output table
+
+attach role to service account 
+
+kubectl annotate serviceaccount aws-load-balancer-controller   -n kube-system   eks.amazonaws.com/role-arn=arn:aws:iam::673318657788:role/AWSLoadBalancerControllerRole
+
+#####################################################################################################################
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller   -n kube-system   --set clusterName=production-cluster   --set serviceAccount.create=false   --set serviceAccount.name=aws-load-balancer-controller   --set region=eu-north-1
+kubectl get deployment aws-load-balancer-controller -n kube-system
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+aws-load-balancer-controller   2/2     2            2           87s
+
+
+
+
+
