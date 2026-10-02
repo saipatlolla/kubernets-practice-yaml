@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+
+  AWSLoadBalancerControllerRole:
+    Type: AWS::IAM::Role
+
+    Properties:
+      RoleName: AWSLoadBalancerControllerRole
+
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: arn:aws:iam::673318657788:oidc-provider/oidc.eks.eu-north-1.amazonaws.com/id/DC149ADD165505B722B1A413CB9622E4
+            Action:
+              - sts:AssumeRoleWithWebIdentity
+
+            Condition:
+              StringEquals:
+                oidc.eks.eu-north-1.amazonaws.com/id/DC149ADD165505B722B1A413CB9622E4:aud: sts.amazonaws.com
+
+                oidc.eks.eu-north-1.amazonaws.com/id/DC149ADD165505B722B1A413CB9622E4:sub: system:serviceaccount:kube-system:aws-load-balancer-controller
+
+      ManagedPolicyArns:
+        - arn:aws:iam::673318657788:policy/AWSLoadBalancerControllerIAMPolicy
