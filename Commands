@@ -42,7 +42,8 @@ aws iam list-policies   --scope Local   --query "Policies[?PolicyName=='iam_poli
 aws iam list-policies   --scope Local   --query 'Policies[*].[PolicyName,Arn]'   --output table
 
 ########################################################################################################################### 
-
+This command will create a role name AWSLoadBalancerControllerRole and also OIDC enable trust policy between iam role and k8s servuice account using file file://lbc-trust-policy.json. So here role creation and enabling trust relation ship are heppening in single command.
+ 
 aws iam create-role --role-name AWSLoadBalancerControllerRole --assume-role-policy-document file://lbc-trust-policy.json
 
 aws iam get-role --role-name AWSLoadBalancerControllerRole
