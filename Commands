@@ -51,6 +51,8 @@ aws iam attach-role-policy --role-name AWSLoadBalancerControllerRole --policy-ar
 
 aws iam list-attached-role-policies --role-name AWSLoadBalancerControllerRole --output table
 
+aws iam update-assume-role-policy --role-name AWSLoadBalancerControllerRole --policy-document file://lbc-trust-policy.json
+
 attach role to service account 
 
 kubectl annotate serviceaccount aws-load-balancer-controller   -n kube-system   eks.amazonaws.com/role-arn=arn:aws:iam::673318657788:role/AWSLoadBalancerControllerRole
