@@ -1,3 +1,22 @@
+1. Create IAM Policy
+       ↓
+2. Create IAM Role
+       ↓
+3. Attach IAM Policy to IAM Role
+       ↓
+4. Check EKS OIDC issuer
+       ↓
+5. Create/connect the OIDC Identity Provider
+       ↓
+6. Configure trust relationship on IAM Role
+       ↓
+7. Create Kubernetes ServiceAccount
+       ↓
+8. Annotate ServiceAccount with IAM Role ARN
+       ↓
+9. Install/configure AWS Load Balancer Controller
+
+
 check oidc issuer
 
 aws eks describe-cluster --name production-cluster --query 'cluster.identity.oidc.issuer' --output text
